@@ -18,7 +18,7 @@ Apply the plugin:
 
 	apply plugin: 'net.ofnir.gradle.filewatch'
 
-Example to watch things: *`compileGroovy`, if there are changes in 
+Example to watch things: *`compileGroovy`, if there are changes in `src/main/groovy`*
 
 	filewatches {
 		compileGroovy {
