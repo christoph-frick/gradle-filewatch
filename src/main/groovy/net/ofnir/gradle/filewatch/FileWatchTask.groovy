@@ -57,7 +57,6 @@ class FileWatchTask extends DefaultTask {
                     {
                         logger.info "Running $config.name for $it"
                         runTask()
-                        Thread.sleep(5000)
                         taskObserver.onNext(config.name)
                     },
                     { logger.error "Error running $config" }
