@@ -56,7 +56,12 @@ class FileWatchTask extends DefaultTask {
             rx.Observable.zip(taskObserver, fileObserver, {task, file -> file}).subscribe(
                     {
                         logger.info "Running $config.name for $it"
-                        runTask()
+                        try {
+                            runTask()
+                        }
+                        catch (Exception|Throwable e) {
+                            logger.debug e.message, e
+                        }
                         taskObserver.onNext(config.name)
                     },
                     { logger.error "Error running $config" }
@@ -71,8 +76,12 @@ class FileWatchTask extends DefaultTask {
             final t = project.tasks.create("again$taskName", GradleBuild, {
                 tasks = [taskName]
             })
-            t.execute()
-            project.tasks.remove(t)
+            try {
+                t.execute()
+            }
+            finally {
+                project.tasks.remove(t)
+            }
         }
 
     }
