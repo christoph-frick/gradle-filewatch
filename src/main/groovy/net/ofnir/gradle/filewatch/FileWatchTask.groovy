@@ -4,7 +4,9 @@ import org.apache.commons.io.monitor.FileAlterationListenerAdaptor
 import org.apache.commons.io.monitor.FileAlterationMonitor
 import org.apache.commons.io.monitor.FileAlterationObserver
 import org.gradle.api.DefaultTask
+import org.gradle.api.InvalidUserDataException
 import org.gradle.api.Project
+import org.gradle.api.Task
 import org.gradle.api.tasks.GradleBuild
 import org.gradle.api.tasks.TaskAction
 import rx.subjects.BehaviorSubject
@@ -27,6 +29,11 @@ class FileWatchTask extends DefaultTask {
         Monitor(Project project, FileWatchConfig config) {
             this.project = project
             this.config = config
+
+            if (!firstTask) {
+                throw new InvalidUserDataException("Task '${config.name}' does not exist in this project")
+            }
+
             monitor = new FileAlterationMonitor(THROTTLE)
             taskObserver = BehaviorSubject.create(null as String)
             fileObserver = BehaviorSubject.create(null as String)
@@ -66,6 +73,14 @@ class FileWatchTask extends DefaultTask {
                     },
                     { logger.error "Error running $config" }
             )
+        }
+
+        private Task getFirstTask() {
+            def tasks = project.getTasksByName(config.name, false)
+            if (tasks) {
+                return tasks.first()
+            }
+            return null
         }
 
         void start() { monitor.start() }
