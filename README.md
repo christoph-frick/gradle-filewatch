@@ -1,7 +1,7 @@
 gradle-filewatch
 ================
 
-Watch directories in the build and executes tasks on file changes
+Watches (or monitors if you like) directories in the Gradle build and executes tasks on file changes.  It uses RxGroovy to throttle file change bursts and sequentialize the builds.
 
 Usage
 -----
@@ -25,7 +25,6 @@ Example to watch things: *`compileGroovy`, if there are changes in `src/main/gro
 			path = 'src/main/groovy'
 		}
 	}
-
 
 ToDos
 -----
